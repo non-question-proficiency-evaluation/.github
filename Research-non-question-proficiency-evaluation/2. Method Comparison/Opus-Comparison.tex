@@ -1,0 +1,1171 @@
+\documentclass[11pt,letterpaper]{article}
+
+% Required Packages
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{tocloft}
+
+\pgfplotsset{compat=1.17}
+
+% Custom Commands
+\newcommand{\milestone}[1]{\textbf{\textcolor{blue}{#1}}}
+\newcommand{\metric}[1]{\textbf{\textcolor{green!60!black}{#1}}}
+\newcommand{\risk}[1]{\textbf{\textcolor{red}{#1}}}
+\newcommand{\mitigation}[1]{\textbf{\textcolor{orange}{#1}}}
+\newcommand{\techterm}[1]{\textbf{\textcolor{purple}{#1}}}
+\newcommand{\code}[1]{\texttt{\textcolor{blue}{#1}}}
+\newcommand{\methodname}[1]{\textbf{#1}}
+
+% Document Metadata
+\newcommand{\projectname}{Non-Question Proficiency Evaluation Framework}
+\newcommand{\projectsubtitle}{Methodology Comparison and Ranking Report}
+\newcommand{\authorteam}{Research Analysis Team}
+\newcommand{\documentversion}{1.0}
+\newcommand{\documentdate}{\today}
+\newcommand{\documentstatus}{Final Report}
+
+% Header/Footer Setup
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\projectname}
+\fancyhead[R]{\documentversion}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Hyperref Setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=green!50!black,
+    urlcolor=blue!70!black
+}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+\begin{document}
+
+%=============================================================================
+% TITLE PAGE
+%=============================================================================
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Huge\bfseries \projectname \par}
+    \vspace{0.5cm}
+    {\LARGE \projectsubtitle \par}
+    
+    \vspace{2cm}
+    
+    {\Large\itshape Which Method is Best for Non-Question\\ Proficiency Evaluation? \par}
+    
+    \vspace{3cm}
+    
+    {\large
+    \begin{tabular}{rl}
+        \textbf{Author:} & \authorteam \\
+        \textbf{Version:} & \documentversion \\
+        \textbf{Date:} & \documentdate \\
+        \textbf{Status:} & \documentstatus \\
+        \textbf{Project:} & NEXS-399 \\
+    \end{tabular}
+    }
+    
+    \vfill
+    
+    {\large\textbf{Abstract}\par}
+    \vspace{0.5cm}
+    \begin{minipage}{0.85\textwidth}
+    This report provides a comprehensive evaluation and ranking of methodologies for estimating learner proficiency from non-question learning activities. Based on systematic analysis of thirteen identified methods across three categories---Heuristic-Based, Model-Based, and Machine Learning-Based---this document delivers evidence-based recommendations for implementation in the Non-Question Proficiency Evaluation Framework. The analysis draws exclusively from established research evidence documenting correlations between engagement data and learning outcomes, with statistical accuracy typically ranging from $r = 0.40$ to $0.65$.
+    \end{minipage}
+    
+    \vfill
+\end{titlepage}
+
+%=============================================================================
+% TABLE OF CONTENTS
+%=============================================================================
+\tableofcontents
+\newpage
+
+%=============================================================================
+% EXECUTIVE SUMMARY
+%=============================================================================
+\section{Executive Summary}
+
+\subsection{Overview}
+
+This report addresses the critical question: \textbf{Which method is best for the Non-Question Proficiency Evaluation Framework?} The analysis evaluates thirteen distinct methodologies for estimating proficiency gain from engagement data, organized into three categories: Heuristic-Based Methods (4 methods), Model-Based Methods (5 methods), and Machine Learning-Based Methods (4 methods).
+
+The fundamental premise---that estimating proficiency from non-question activities is feasible---is strongly supported by research evidence. Studies consistently demonstrate correlations between engagement metrics and learning outcomes, with behavioral indicators such as video pausing and rewinding positively correlated with exam performance. Engagement-based proficiency estimation achieves moderate to strong correlation with assessment outcomes, typically ranging from $r = 0.40$ to $0.65$.
+
+\subsection{Key Findings}
+
+\subsubsection{Top-Ranked Methods by Category}
+
+\textbf{Tier 1 (Highest Recommendation):}
+
+\begin{enumerate}
+    \item \methodname{Half-Life Regression (HLR)} --- Combines the Ebbinghaus forgetting curve with engagement data; demonstrated 12\% improvement in daily user retention at Duolingo
+    \item \methodname{Deep Knowledge Tracing (DKT) with Engagement Features} --- Neural network approach processing sequences of interactions; supported by peer-reviewed research (Piech et al., 2015)
+    \item \methodname{Stealth Assessment (SPRING)} --- Data-driven pipeline achieving correlation of approximately 0.55 with test outcomes from game logs
+\end{enumerate}
+
+\textbf{Tier 2 (Strong Recommendation):}
+
+\begin{enumerate}
+    \setcounter{enumi}{3}
+    \item \methodname{Engagement-Weighted Bayesian Knowledge Tracing (EW-BKT)} --- Extends classical BKT with engagement signals
+    \item \methodname{Performance Factors Analysis (PFA) with Engagement Covariates} --- Logistic regression incorporating engagement factors
+    \item \methodname{Multi-Modal Attention Models (MMAE)} --- Combines multiple signals for attention quality inference
+\end{enumerate}
+
+\subsubsection{Best Methods by Content Type}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Content Type} & \textbf{Primary Recommendation} & \textbf{Secondary Recommendation} \\
+\midrule
+Video Content & Cognitive Load Proxy Model (CLPM) & DKT with Engagement Features \\
+Text/PDF Content & Half-Life Regression (HLR) & Time-Weighted Completion Model \\
+Interactive Content & Stealth Assessment (SPRING) & DKT with Engagement Features \\
+\bottomrule
+\end{tabular}
+\caption{Content-Specific Method Recommendations}
+\end{table}
+
+\subsection{Implementation Priorities}
+
+Based on the analysis, the recommended implementation sequence is:
+
+\begin{enumerate}
+    \item \textbf{Phase 1:} Implement Heuristic methods (Time-on-Task, TWCM) for baseline functionality
+    \item \textbf{Phase 2:} Deploy Model-Based methods (HLR, EW-BKT) for improved accuracy
+    \item \textbf{Phase 3:} Integrate ML-Based methods (DKT, SPRING) for advanced capabilities
+\end{enumerate}
+
+\newpage
+
+%=============================================================================
+% INTRODUCTION
+%=============================================================================
+\section{Introduction}
+
+\subsection{Problem Statement}
+
+Traditional assessment of learner proficiency relies heavily on direct questioning---quizzes, tests, and examinations that provide explicit ``right or wrong'' signals. However, modern digital learning environments generate vast amounts of engagement data from non-question activities: watching videos, reading articles, interacting with simulations, and navigating educational content. The challenge addressed by the Non-Question Proficiency Evaluation Framework is to \textbf{estimate proficiency gain from these passive and semi-active learning interactions without requiring explicit assessment questions}.
+
+This approach offers several potential benefits: reduced test anxiety for learners, continuous rather than discrete proficiency tracking, more engaging learning experiences, and the ability to identify learning progress without interrupting the learning flow. However, it presents significant methodological challenges, as passive study is generally less predictive of retention than active practice, requiring these estimates to be treated as ``lower-confidence evidence'' until validated by subsequent assessment.
+
+\subsection{Research Objectives}
+
+This report aims to:
+
+\begin{enumerate}
+    \item Provide a \textbf{comprehensive review} of all methodologies identified for estimating proficiency from engagement data
+    \item Develop a \textbf{systematic ranking} based on multiple evaluation criteria
+    \item Deliver a \textbf{comparative analysis} of strengths and weaknesses for each approach
+    \item Offer \textbf{content-specific recommendations} for video, text/PDF, and interactive content
+    \item Propose an \textbf{implementation roadmap} for the NEXS-399 project
+\end{enumerate}
+
+\subsection{Scope and Methodology}
+
+This analysis is based exclusively on the source document ``Feasibility and Methods.txt,'' which synthesizes research evidence and industry practices regarding proficiency estimation from engagement data. The evaluation considers:
+
+\begin{itemize}
+    \item Empirical evidence supporting each method's validity
+    \item Reported accuracy and predictive power metrics
+    \item Theoretical foundations from cognitive science and learning theory
+    \item Practical implementation considerations
+    \item Industry adoption patterns from major learning platforms
+\end{itemize}
+
+The source material documents practices from Khan Academy, Duolingo, Coursera, edX, Brilliant, and Codecademy, as well as peer-reviewed research from venues including conferences on knowledge tracing, educational data mining, and learning analytics.
+
+\subsection{Evidence Base for Feasibility}
+
+The source material establishes that estimating proficiency from content engagement is \textbf{feasible as an estimation problem under uncertainty}. Key supporting evidence includes:
+
+\begin{itemize}
+    \item \textbf{Engagement Correlations:} Every additional minute on Khan Academy was associated with gains on standardized tests
+    \item \textbf{Behavioral Indicators:} Pausing and rewinding videos positively correlates with higher exam performance; frequent fast-forwarding correlates with lower performance
+    \item \textbf{Stealth Assessment Validation:} Pearson's SPRING research demonstrated correlation of approximately 0.55 between game log predictions and test outcomes
+    \item \textbf{Early Prediction:} MOOC research found that first-week attendance and utilization rates highly predict eventual course completion
+    \item \textbf{Statistical Accuracy Range:} Engagement-based estimation typically achieves $r = 0.40$ to $0.65$ correlation with assessment outcomes
+\end{itemize}
+
+\newpage
+
+%=============================================================================
+% COMPREHENSIVE METHODOLOGY REVIEW
+%=============================================================================
+\section{Comprehensive Methodology Review}
+
+This section provides detailed descriptions of all thirteen methods identified in the source material, organized by their methodological category. Each method is characterized according to its theoretical basis, operational mechanism, and documented applications.
+
+\subsection{Category 1: Heuristic-Based Methods}
+
+Heuristic-based methods rely on pre-defined rules and expert judgment rather than statistical inference. They are typically employed for immediate feedback and gamification purposes.
+
+\subsubsection{Method 1: Heuristic Point Systems (XP Models)}
+
+\textbf{Description:} Assigns experience points or progress percentages for completing content. This approach is exemplified by Duolingo's XP system and Khan Academy's energy points.
+
+\textbf{Mechanism:} Points are awarded based on activity completion, with potential weighting by activity type or difficulty. The accumulated points serve as a proxy for progress and engagement.
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Simple to implement and understand
+    \item Provides immediate feedback to learners
+    \item Primarily serves gamification rather than precise proficiency estimation
+    \item Does not directly measure learning or retention
+\end{itemize}
+
+\textbf{Industry Example:} Duolingo uses XP for gamification purposes, though their core proficiency model (HLR) relies on different mechanisms.
+
+\subsubsection{Method 2: Time-on-Task \& Completion Metrics}
+
+\textbf{Description:} Uses normalized time spent and completion rates as direct predictors of success. Metrics include percentage of video watched, time spent on reading materials, and completion status of activities.
+
+\textbf{Mechanism:} Engagement is quantified through temporal measures (duration, frequency) and completion indicators, which are then correlated with expected learning outcomes.
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Based on well-documented correlation between time-on-task and learning
+    \item Easy to collect and process at scale
+    \item Susceptible to gaming (leaving content open without engagement)
+    \item Does not distinguish quality of engagement
+\end{itemize}
+
+\textbf{Research Support:} Studies show higher engagement---measured by time spent, completion rates, and re-engagement---correlates with better test scores.
+
+\subsubsection{Method 3: Mastery-Based Engagement Scoring (MBES)}
+
+\textbf{Description:} A threshold-based system where proficiency levels are assigned based on engagement triggers. Levels typically include: Attempted, Familiar, Proficient, and Mastered.
+
+\textbf{Mechanism:} Predefined thresholds determine level transitions. For example, completing 80\% of content might advance a learner from ``Attempted'' to ``Familiar.''
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Provides discrete, interpretable proficiency levels
+    \item Aligns with mastery learning pedagogical approaches
+    \item Threshold selection requires expert judgment or calibration
+    \item May not capture continuous proficiency development
+\end{itemize}
+
+\subsubsection{Method 4: Time-Weighted Completion Model (TWCM)}
+
+\textbf{Description:} A simple model that weights content completion by the quality of time spent relative to expected duration.
+
+\textbf{Mechanism:} Compares actual time spent against expected/normative time to assess engagement quality. Completion weighted by this ratio provides an adjusted proficiency estimate.
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Accounts for both completion and engagement quality
+    \item Requires calibration of expected durations
+    \item More nuanced than simple completion metrics
+    \item Still relies on time as primary signal
+\end{itemize}
+
+\subsection{Category 2: Model-Based (Probabilistic and Statistical) Methods}
+
+Model-based methods employ established psychological or cognitive theories to model how knowledge is acquired or forgotten over time. They provide probabilistic estimates grounded in learning science.
+
+\subsubsection{Method 5: Engagement-Weighted Bayesian Knowledge Tracing (EW-BKT)}
+
+\textbf{Description:} An extension of standard Bayesian Knowledge Tracing that treats content interactions as ``learning opportunities.'' Uses engagement signals to modify the probability of knowledge state transitions.
+
+\textbf{Mechanism:} Standard BKT models the probability that a student has learned a skill based on response sequences. EW-BKT extends this by incorporating engagement signals (completion, interaction density) to adjust the transition probability from unlearned to learned states.
+
+\textbf{Theoretical Foundation:} Based on Corbett \& Anderson's (1994) foundational work on knowledge tracing for modeling procedural knowledge acquisition.
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Grounded in well-established knowledge tracing theory
+    \item Provides probabilistic uncertainty estimates
+    \item Adapts classical assessment-based model to engagement data
+    \item Requires parameter estimation from data
+\end{itemize}
+
+\textbf{Reference:} Corbett, A. T., \& Anderson, J. R. (1994). \textit{Knowledge tracing: Modeling the acquisition of procedural knowledge.}
+
+\subsubsection{Method 6: Half-Life Regression (HLR)}
+
+\textbf{Description:} Combines the Ebbinghaus forgetting curve with engagement data to estimate memory strength and predict recall probability over time.
+
+\textbf{Mechanism:} Models the ``half-life'' of memory---the time until recall probability drops to 50\%---as a function of engagement history, practice frequency, and item characteristics. Longer half-lives indicate stronger memory/proficiency.
+
+\textbf{Theoretical Foundation:} Based on Settles \& Meeder's (2016) trainable spaced repetition model, which integrates forgetting curve theory with machine learning.
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Explicitly models memory decay and retention
+    \item Supports spaced repetition scheduling
+    \item Trainable parameters adapt to individual learners
+    \item Demonstrated success at Duolingo (12\% retention improvement)
+\end{itemize}
+
+\textbf{Reference:} Settles, B., \& Meeder, B. (2016). \textit{A trainable spaced repetition model.}
+
+\subsubsection{Method 7: Performance Factors Analysis (PFA) with Engagement Covariates}
+
+\textbf{Description:} A logistic regression model incorporating both prior performance history and current engagement factors to predict proficiency.
+
+\textbf{Mechanism:} Extends PFA by including engagement metrics (time spent, interaction patterns) as additional covariates alongside traditional success/failure counts.
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Interpretable logistic regression framework
+    \item Combines assessment and engagement data
+    \item Allows identification of important predictive factors
+    \item Requires sufficient data for reliable parameter estimation
+\end{itemize}
+
+\subsubsection{Method 8: Item Response Theory (IRT) Analogy}
+
+\textbf{Description:} Adapts IRT concepts to treat content pieces as ``items'' with specific difficulty levels, where future success on related questions validates proficiency gained from that content.
+
+\textbf{Mechanism:} Content is characterized by difficulty parameters analogous to IRT item parameters. Engagement with content of known difficulty informs latent proficiency estimates.
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Leverages well-established psychometric theory
+    \item Requires subsequent assessment for validation
+    \item Provides principled difficulty calibration
+    \item Indirect measure requiring assessment confirmation
+\end{itemize}
+
+\subsubsection{Method 9: Cognitive Load Proxy Model (CLPM)}
+
+\textbf{Description:} Estimates ``germane load'' (productive learning effort) versus ``extraneous load'' by analyzing engagement patterns such as video pauses and rewinds.
+
+\textbf{Mechanism:} Interprets behavioral signals (pausing, rewinding, re-reading) as indicators of cognitive processing. Patterns suggesting effortful processing indicate learning engagement.
+
+\textbf{Theoretical Foundation:} Based on cognitive load theory and supported by research showing pausing/rewinding correlates with higher exam performance.
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Grounded in cognitive load theory from learning science
+    \item Particularly applicable to video content
+    \item Distinguishes productive struggle from confusion
+    \item Requires behavioral pattern interpretation
+\end{itemize}
+
+\textbf{Supporting Evidence:} Guo, Kim, \& Rubin (2014) documented how video production affects student engagement; Yürüm et al. (2022) demonstrated video clickstream data predicts test performance.
+
+\subsection{Category 3: Machine Learning (ML)-Based Methods}
+
+Machine learning approaches learn complex, non-linear mappings between behavioral logs and proficiency outcomes from data, without requiring explicit cognitive models.
+
+\subsubsection{Method 10: Deep Knowledge Tracing (DKT) with Engagement Features}
+
+\textbf{Description:} Uses Recurrent Neural Networks (RNNs) or Transformers to process sequences of student interactions, including non-question data, to predict future performance.
+
+\textbf{Mechanism:} Neural networks learn temporal patterns in interaction sequences, modeling how engagement over time relates to knowledge state evolution.
+
+\textbf{Theoretical Foundation:} Based on Piech et al.'s (2015) deep knowledge tracing framework, extended with engagement features.
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Captures complex temporal patterns
+    \item Does not require explicit feature engineering
+    \item Requires substantial training data
+    \item Less interpretable than model-based approaches
+\end{itemize}
+
+\textbf{Recent Development:} Tong \& Ren (2025) integrated DKT with cognitive load estimation for personalized learning paths.
+
+\textbf{Reference:} Piech, C., et al. (2015). \textit{Deep knowledge tracing.}
+
+\subsubsection{Method 11: Stealth Assessment (e.g., Pearson's SPRING)}
+
+\textbf{Description:} A data-driven pipeline using Evidence-Centered Design (ECD) to infer proficiency from action sequences and game logs without direct questioning.
+
+\textbf{Mechanism:} SPRING (Student PRoficiency INferrer from Game data) processes game activity logs through a pipeline that extracts evidence of learning from player actions, validated against external assessments.
+
+\textbf{Documented Performance:} Achieved correlation of approximately 0.55 with test outcomes, demonstrating that action sequences can predict learning without quiz questions.
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Designed specifically for game-based and interactive learning
+    \item Evidence-Centered Design provides principled framework
+    \item Validated against external assessments
+    \item Requires structured activity logging
+\end{itemize}
+
+\textbf{Reference:} Gonzalez-Brenes et al. (2016). \textit{A Data-Driven Approach for Inferring Student Proficiency from Game Activity Logs.}
+
+\subsubsection{Method 12: Multi-Modal Attention Models (MMAE)}
+
+\textbf{Description:} Combines multiple disparate signals---scroll depth, video playback speed changes, session frequency---to infer attention quality and subsequent learning.
+
+\textbf{Mechanism:} Attention mechanisms weight different behavioral signals based on their relevance to proficiency prediction, learning optimal combinations from data.
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Integrates diverse behavioral signals
+    \item Attention mechanism identifies relevant features
+    \item Flexible across content types
+    \item Requires multi-modal data collection
+\end{itemize}
+
+\subsubsection{Method 13: Regression/Classification Predictive Models}
+
+\textbf{Description:} Direct models (Random Forests, Logistic Regression) trained to predict final exam scores or mastery states early in a course based on ``clickstream'' features.
+
+\textbf{Mechanism:} Standard supervised learning approaches trained on engagement features to predict assessment outcomes.
+
+\textbf{Characteristics:}
+\begin{itemize}
+    \item Straightforward supervised learning framework
+    \item Can use any combination of engagement features
+    \item Interpretable (especially tree-based methods)
+    \item Requires labeled outcome data for training
+\end{itemize}
+
+\textbf{Supporting Evidence:} MOOC research demonstrated that attendance and utilization rates in the first week highly predict eventual course completion.
+
+\newpage
+
+%=============================================================================
+% SYSTEMATIC RANKING AND EVALUATION
+%=============================================================================
+\section{Systematic Ranking and Evaluation}
+
+This section presents a systematic evaluation of all thirteen methods against defined criteria, resulting in an overall ranking with justification based on evidence from the source material.
+
+\subsection{Evaluation Criteria}
+
+Methods are evaluated on seven criteria derived from the source material's discussion of successful implementations and validation approaches:
+
+\begin{enumerate}
+    \item \textbf{Empirical Validity (EV):} Evidence supporting the method's theoretical basis and documented use
+    \item \textbf{Accuracy/Predictive Power (AP):} Reported correlation or prediction accuracy
+    \item \textbf{Theoretical Foundation (TF):} Grounding in established learning science or cognitive theory
+    \item \textbf{Practical Applicability (PA):} Ease of implementation and deployment
+    \item \textbf{Generalizability (GE):} Applicability across different content types and contexts
+    \item \textbf{Validation Capability (VC):} Ability to calibrate and validate estimates
+    \item \textbf{Industry Adoption (IA):} Evidence of use by major learning platforms
+\end{enumerate}
+
+\subsection{Scoring Methodology}
+
+Each method receives a score of 1--5 for each criterion:
+
+\begin{itemize}
+    \item \textbf{5:} Strong evidence/support in source material
+    \item \textbf{4:} Good evidence/support with minor limitations
+    \item \textbf{3:} Moderate evidence/support
+    \item \textbf{2:} Limited evidence/support
+    \item \textbf{1:} Minimal or no evidence/support
+\end{itemize}
+
+\textbf{Weighting:} Criteria are weighted based on importance to the framework's goals:
+
+\begin{itemize}
+    \item Empirical Validity: 20\%
+    \item Accuracy/Predictive Power: 20\%
+    \item Theoretical Foundation: 15\%
+    \item Practical Applicability: 15\%
+    \item Generalizability: 10\%
+    \item Validation Capability: 10\%
+    \item Industry Adoption: 10\%
+\end{itemize}
+
+\subsection{Detailed Scoring}
+
+\subsubsection{Heuristic-Based Methods}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{@{}lccccccc|c@{}}
+\toprule
+\textbf{Method} & \textbf{EV} & \textbf{AP} & \textbf{TF} & \textbf{PA} & \textbf{GE} & \textbf{VC} & \textbf{IA} & \textbf{Weighted} \\
+\midrule
+XP Models & 3 & 2 & 2 & 5 & 4 & 2 & 4 & 2.95 \\
+Time-on-Task & 4 & 3 & 3 & 5 & 4 & 3 & 4 & 3.60 \\
+MBES & 3 & 2 & 3 & 4 & 3 & 3 & 3 & 2.90 \\
+TWCM & 3 & 3 & 3 & 4 & 4 & 3 & 2 & 3.15 \\
+\bottomrule
+\end{tabular}
+\caption{Heuristic-Based Methods Scoring}
+\end{table}
+
+\textbf{Justifications:}
+
+\textit{XP Models:} High practical applicability (simple implementation) and industry adoption (Duolingo, Khan Academy) but low accuracy---source notes these are for gamification, not proficiency measurement.
+
+\textit{Time-on-Task:} Source documents correlation between time spent and test scores (Khan Academy evidence). High practical applicability with moderate accuracy.
+
+\textit{MBES:} Threshold-based approach aligned with mastery learning but limited evidence of predictive accuracy in source.
+
+\textit{TWCM:} Improves on simple completion by incorporating time quality; moderate support across criteria.
+
+\subsubsection{Model-Based Methods}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{@{}lccccccc|c@{}}
+\toprule
+\textbf{Method} & \textbf{EV} & \textbf{AP} & \textbf{TF} & \textbf{PA} & \textbf{GE} & \textbf{VC} & \textbf{IA} & \textbf{Weighted} \\
+\midrule
+EW-BKT & 4 & 4 & 5 & 3 & 4 & 4 & 3 & 3.90 \\
+HLR & 5 & 5 & 5 & 4 & 4 & 5 & 5 & 4.70 \\
+PFA + Engagement & 4 & 4 & 4 & 3 & 4 & 4 & 3 & 3.75 \\
+IRT Analogy & 3 & 3 & 5 & 2 & 3 & 4 & 2 & 3.10 \\
+CLPM & 4 & 4 & 5 & 3 & 3 & 3 & 3 & 3.65 \\
+\bottomrule
+\end{tabular}
+\caption{Model-Based Methods Scoring}
+\end{table}
+
+\textbf{Justifications:}
+
+\textit{EW-BKT:} Strong theoretical foundation (Corbett \& Anderson, 1994); adapts proven BKT to engagement data with good generalizability.
+
+\textit{HLR:} Highest scores---source documents 12\% retention improvement at Duolingo, strong theoretical basis in forgetting curves, trainable parameters, and clear validation approach.
+
+\textit{PFA + Engagement:} Interpretable logistic regression with engagement covariates; solid theoretical grounding and good accuracy.
+
+\textit{IRT Analogy:} Excellent theoretical foundation but requires assessment validation; lower practical applicability for pure engagement-based estimation.
+
+\textit{CLPM:} Strong fit for video content based on documented correlation between pausing/rewinding and performance; specialized rather than general.
+
+\subsubsection{ML-Based Methods}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{@{}lccccccc|c@{}}
+\toprule
+\textbf{Method} & \textbf{EV} & \textbf{AP} & \textbf{TF} & \textbf{PA} & \textbf{GE} & \textbf{VC} & \textbf{IA} & \textbf{Weighted} \\
+\midrule
+DKT + Engagement & 5 & 4 & 4 & 2 & 5 & 4 & 4 & 4.00 \\
+SPRING & 5 & 5 & 4 & 2 & 3 & 5 & 4 & 4.10 \\
+MMAE & 4 & 4 & 3 & 2 & 4 & 3 & 2 & 3.30 \\
+Regression/Classification & 4 & 4 & 2 & 4 & 4 & 4 & 4 & 3.70 \\
+\bottomrule
+\end{tabular}
+\caption{ML-Based Methods Scoring}
+\end{table}
+
+\textbf{Justifications:}
+
+\textit{DKT + Engagement:} Strong empirical support (Piech et al., 2015; Tong \& Ren, 2025); highly generalizable but complex implementation.
+
+\textit{SPRING:} Documented correlation of $\approx 0.55$ with test outcomes; excellent validation against external assessments; specialized for interactive/game content.
+
+\textit{MMAE:} Flexible multi-modal approach but limited documented performance metrics in source.
+
+\textit{Regression/Classification:} Strong for early prediction (MOOC evidence); practical but theoretically less grounded.
+
+\subsection{Overall Ranking}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}clcl@{}}
+\toprule
+\textbf{Rank} & \textbf{Method} & \textbf{Score} & \textbf{Tier} \\
+\midrule
+1 & Half-Life Regression (HLR) & 4.70 & Tier 1 \\
+2 & Stealth Assessment (SPRING) & 4.10 & Tier 1 \\
+3 & DKT with Engagement Features & 4.00 & Tier 1 \\
+4 & Engagement-Weighted BKT & 3.90 & Tier 2 \\
+5 & PFA with Engagement Covariates & 3.75 & Tier 2 \\
+6 & Regression/Classification & 3.70 & Tier 2 \\
+7 & Cognitive Load Proxy Model & 3.65 & Tier 2 \\
+8 & Time-on-Task \& Completion & 3.60 & Tier 3 \\
+9 & Multi-Modal Attention Models & 3.30 & Tier 3 \\
+10 & Time-Weighted Completion & 3.15 & Tier 3 \\
+11 & IRT Analogy & 3.10 & Tier 3 \\
+12 & Heuristic Point Systems (XP) & 2.95 & Tier 4 \\
+13 & Mastery-Based Engagement Scoring & 2.90 & Tier 4 \\
+\bottomrule
+\end{tabular}
+\caption{Overall Method Ranking}
+\end{table}
+
+\subsection{Tier Classification}
+
+\textbf{Tier 1 (Score $\geq$ 4.0):} Methods with strong empirical validation, demonstrated accuracy, and solid theoretical or practical foundations. Recommended for primary implementation.
+
+\textbf{Tier 2 (Score 3.6--3.99):} Methods with good support and clear applicability. Recommended for secondary implementation or specific use cases.
+
+\textbf{Tier 3 (Score 3.1--3.59):} Methods with moderate support. Suitable for baseline or supplementary roles.
+
+\textbf{Tier 4 (Score $<$ 3.1):} Methods with limited evidence for accurate proficiency estimation. Suitable only for gamification or auxiliary purposes.
+
+\newpage
+
+%=============================================================================
+% COMPARATIVE ANALYSIS
+%=============================================================================
+\section{Comparative Analysis}
+
+This section provides detailed side-by-side comparison of methods, analyzing strengths and weaknesses, use cases, and implementation complexity.
+
+\subsection{Strengths and Weaknesses Matrix}
+
+\begin{longtable}{@{}p{2.5cm}p{5.5cm}p{5.5cm}@{}}
+\toprule
+\textbf{Method} & \textbf{Strengths} & \textbf{Weaknesses} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Method} & \textbf{Strengths} & \textbf{Weaknesses} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{\textit{Continued on next page}} \\
+\endfoot
+\bottomrule
+\caption{Comprehensive Strengths and Weaknesses Analysis}
+\endlastfoot
+
+XP Models & Simple implementation; immediate learner feedback; strong gamification value & Does not measure actual learning; easily gamed; no predictive validity for proficiency \\
+\midrule
+Time-on-Task & Easy to collect; documented correlation with outcomes; scalable & Cannot distinguish engagement quality; susceptible to passive viewing; moderate accuracy \\
+\midrule
+MBES & Interpretable levels; aligns with mastery learning; clear thresholds & Threshold selection arbitrary; discrete rather than continuous; limited validation \\
+\midrule
+TWCM & Accounts for engagement quality; more nuanced than simple completion & Requires expected duration calibration; still primarily time-based \\
+\midrule
+EW-BKT & Strong theoretical foundation; probabilistic uncertainty; adapts proven model & Parameter estimation complexity; requires substantial interaction data \\
+\midrule
+HLR & Documented 12\% retention improvement; models forgetting; trainable & Requires practice data for optimal calibration; complexity moderate \\
+\midrule
+PFA + Engagement & Interpretable coefficients; combines assessment and engagement; flexible & Requires assessment data for training; parameter estimation needs data \\
+\midrule
+IRT Analogy & Strong psychometric theory; principled difficulty calibration & Requires subsequent assessment validation; indirect measurement \\
+\midrule
+CLPM & Grounded in cognitive load theory; strong for video; captures effort & Video-specific; requires behavioral pattern interpretation \\
+\midrule
+DKT + Engagement & Captures complex patterns; highly flexible; strong empirical support & Requires substantial data; less interpretable; computational cost \\
+\midrule
+SPRING & Validated $r \approx 0.55$; designed for interactive content; ECD framework & Specialized for games/simulations; requires structured logging \\
+\midrule
+MMAE & Integrates diverse signals; flexible; attention mechanism & Limited performance documentation; complex implementation \\
+\midrule
+Regression/Classification & Straightforward ML; interpretable trees; good early prediction & Theoretically less grounded; requires labeled outcomes \\
+\end{longtable}
+
+\subsection{Use Case Analysis}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Method} & \textbf{Real-time} & \textbf{Low Data} & \textbf{High Accuracy} & \textbf{Interpretable} \\
+\midrule
+XP Models & \checkmark & \checkmark & & \checkmark \\
+Time-on-Task & \checkmark & \checkmark & & \checkmark \\
+MBES & \checkmark & \checkmark & & \checkmark \\
+TWCM & \checkmark & \checkmark & & \checkmark \\
+EW-BKT & & & \checkmark & \checkmark \\
+HLR & & & \checkmark & \checkmark \\
+PFA + Engagement & & & \checkmark & \checkmark \\
+IRT Analogy & & & & \checkmark \\
+CLPM & \checkmark & & \checkmark & \checkmark \\
+DKT + Engagement & & & \checkmark & \\
+SPRING & & & \checkmark & \\
+MMAE & & & \checkmark & \\
+Regression/Classification & & & \checkmark & \checkmark \\
+\bottomrule
+\end{tabular}
+\caption{Use Case Suitability Matrix}
+\end{table}
+
+\textbf{Legend:}
+\begin{itemize}
+    \item \textbf{Real-time:} Suitable for immediate feedback without historical data
+    \item \textbf{Low Data:} Functions effectively with minimal training data
+    \item \textbf{High Accuracy:} Documented strong predictive performance
+    \item \textbf{Interpretable:} Provides understandable proficiency estimates
+\end{itemize}
+
+\subsection{Implementation Complexity Assessment}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}llp{8cm}@{}}
+\toprule
+\textbf{Method} & \textbf{Complexity} & \textbf{Implementation Notes} \\
+\midrule
+XP Models & Simple & Basic counters and aggregations \\
+Time-on-Task & Simple & Event logging and duration calculation \\
+MBES & Simple & Threshold configuration and level assignment \\
+TWCM & Simple & Duration normalization and weighting \\
+EW-BKT & Moderate & Bayesian parameter estimation; state tracking \\
+HLR & Moderate & Forgetting curve modeling; regression training \\
+PFA + Engagement & Moderate & Logistic regression with feature engineering \\
+IRT Analogy & Moderate & Item parameter estimation; latent trait modeling \\
+CLPM & Moderate & Behavioral pattern recognition; cognitive interpretation \\
+DKT + Engagement & Complex & Neural network architecture; sequence modeling \\
+SPRING & Complex & ECD framework; evidence extraction pipeline \\
+MMAE & Complex & Multi-modal fusion; attention mechanisms \\
+Regression/Classification & Moderate & Standard ML pipeline; feature selection \\
+\bottomrule
+\end{tabular}
+\caption{Implementation Complexity Classification}
+\end{table}
+
+\subsection{Category Comparison Summary}
+
+\textbf{Heuristic Methods:} Best for rapid deployment, gamification, and baseline functionality. Provide immediate feedback but lower accuracy. Average weighted score: 3.15.
+
+\textbf{Model-Based Methods:} Best for theoretically grounded estimation with interpretable results. Balance accuracy and implementation complexity. Average weighted score: 3.82.
+
+\textbf{ML-Based Methods:} Best for highest accuracy when sufficient data is available. Capture complex patterns but require more resources. Average weighted score: 3.78.
+
+\newpage
+
+%=============================================================================
+% CONTENT-SPECIFIC RECOMMENDATIONS
+%=============================================================================
+\section{Content-Specific Recommendations}
+
+This section provides targeted recommendations for each content type based on the characteristics of available engagement signals and the documented evidence for each method's applicability.
+
+\subsection{Video Content}
+
+\subsubsection{Recommended Methods}
+
+\textbf{Primary: Cognitive Load Proxy Model (CLPM)}
+
+\textit{Rationale:} The source material explicitly documents that behavioral indicators from video interaction---specifically pausing and rewinding---are positively correlated with higher exam performance, while frequent fast-forwarding is associated with lower performance. CLPM is designed to interpret exactly these signals as indicators of cognitive engagement.
+
+\textit{Evidence:} 
+\begin{itemize}
+    \item Guo, Kim, \& Rubin (2014) documented how video production affects student engagement
+    \item Yürüm et al. (2022) demonstrated that video clickstream data predicts university students' test performance
+\end{itemize}
+
+\textbf{Secondary: DKT with Engagement Features}
+
+\textit{Rationale:} For platforms with sufficient video interaction data, DKT can learn complex temporal patterns in viewing behavior that correlate with learning outcomes.
+
+\subsubsection{Key Engagement Signals for Video}
+
+Based on the source material, the following signals are particularly relevant for video content:
+
+\begin{itemize}
+    \item \textbf{Pause frequency and duration:} Positive correlation with learning
+    \item \textbf{Rewind/replay actions:} Indicator of effortful processing
+    \item \textbf{Fast-forward frequency:} Negative correlation with performance
+    \item \textbf{Completion percentage:} Basic engagement indicator
+    \item \textbf{Total watch time vs. video length:} Engagement quality proxy
+\end{itemize}
+
+\subsubsection{Implementation Considerations}
+
+\begin{enumerate}
+    \item Implement detailed video player event logging (pause, seek, play, complete)
+    \item Calculate behavioral ratios (rewinds per minute, completion adjusted for fast-forward)
+    \item Calibrate expected viewing times for different video lengths and complexities
+    \item Consider segmenting long videos to capture per-segment engagement
+\end{enumerate}
+
+\subsection{Text/PDF Content}
+
+\subsubsection{Recommended Methods}
+
+\textbf{Primary: Half-Life Regression (HLR)}
+
+\textit{Rationale:} HLR's strength lies in modeling memory and retention over time, which is particularly relevant for text-based learning where material is often studied in discrete sessions and retention must be tracked across time. The documented 12\% retention improvement at Duolingo demonstrates effectiveness for content that requires memorization and recall.
+
+\textbf{Secondary: Time-Weighted Completion Model (TWCM)}
+
+\textit{Rationale:} For simpler implementations, TWCM provides a practical approach by comparing actual reading time against expected duration, capturing engagement quality for text content.
+
+\subsubsection{Key Engagement Signals for Text/PDF}
+
+\begin{itemize}
+    \item \textbf{Time on page/section:} Primary engagement indicator
+    \item \textbf{Scroll depth and patterns:} Coverage and re-reading indicators
+    \item \textbf{Session frequency:} Spaced practice indicator for HLR
+    \item \textbf{Completion status:} Basic progress indicator
+    \item \textbf{Highlighting/annotation (if available):} Active engagement marker
+\end{itemize}
+
+\subsubsection{Implementation Considerations}
+
+\begin{enumerate}
+    \item Calculate expected reading times based on word count and complexity
+    \item Track scroll position and time spent per section
+    \item For HLR, maintain history of engagement with each content item
+    \item Consider text difficulty when calibrating expected engagement
+\end{enumerate}
+
+\subsection{Interactive Content (Simulations, Games, Exercises)}
+
+\subsubsection{Recommended Methods}
+
+\textbf{Primary: Stealth Assessment (SPRING)}
+
+\textit{Rationale:} SPRING was specifically designed for inferring proficiency from game activity logs using Evidence-Centered Design. The source material documents a correlation of approximately 0.55 between SPRING predictions and test outcomes, validating that action sequences can predict learning without quiz questions.
+
+\textit{Evidence:} Gonzalez-Brenes et al. (2016) demonstrated this data-driven approach for inferring student proficiency from game activity logs.
+
+\textbf{Secondary: DKT with Engagement Features}
+
+\textit{Rationale:} DKT's sequence modeling capabilities are well-suited to the rich interaction patterns generated by interactive content.
+
+\subsubsection{Key Engagement Signals for Interactive Content}
+
+\begin{itemize}
+    \item \textbf{Action sequences:} Pattern of interactions with the simulation/game
+    \item \textbf{Time between actions:} Reflection and planning indicators
+    \item \textbf{Success/failure on embedded challenges:} Direct performance signals
+    \item \textbf{Exploration patterns:} Coverage and curiosity indicators
+    \item \textbf{Help-seeking behavior:} Self-regulation indicator
+    \item \textbf{Retry patterns:} Persistence and learning from failure
+\end{itemize}
+
+\subsubsection{Implementation Considerations}
+
+\begin{enumerate}
+    \item Design structured action logging aligned with ECD principles
+    \item Identify evidence rules linking actions to competencies
+    \item Include embedded micro-challenges that don't feel like assessment
+    \item Track both process (how) and outcome (what) measures
+\end{enumerate}
+
+\subsection{Content-Specific Summary Table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Content Type} & \textbf{Primary Method} & \textbf{Key Signal} & \textbf{Complexity} \\
+\midrule
+Video & CLPM & Pause/rewind patterns & Moderate \\
+Text/PDF & HLR & Time + session spacing & Moderate \\
+Interactive & SPRING & Action sequences & Complex \\
+\bottomrule
+\end{tabular}
+\caption{Content-Specific Recommendation Summary}
+\end{table}
+
+\newpage
+
+%=============================================================================
+% IMPLEMENTATION ROADMAP
+%=============================================================================
+\section{Implementation Roadmap}
+
+This section provides a phased approach to implementing the Non-Question Proficiency Evaluation Framework based on the method rankings and practical considerations.
+
+\subsection{Phased Implementation Approach}
+
+\subsubsection{Phase 1: Foundation (Baseline Functionality)}
+
+\textbf{Duration:} Initial deployment phase
+
+\textbf{Methods to Implement:}
+\begin{enumerate}
+    \item Time-on-Task \& Completion Metrics (Rank 8)
+    \item Time-Weighted Completion Model (Rank 10)
+    \item XP Models (Rank 12) --- for gamification only
+\end{enumerate}
+
+\textbf{Rationale:} These heuristic methods provide immediate functionality with simple implementation. They establish data collection infrastructure and provide baseline proficiency signals while more sophisticated methods are developed.
+
+\textbf{Deliverables:}
+\begin{itemize}
+    \item Event logging for all content interactions
+    \item Basic proficiency scores based on completion and time
+    \item Gamification layer (XP, streaks) for engagement
+    \item Data pipeline for storing interaction logs
+\end{itemize}
+
+\textbf{Success Criteria:}
+\begin{itemize}
+    \item All content interactions logged with timestamps
+    \item Basic proficiency scores generated in real-time
+    \item Data available for training advanced models
+\end{itemize}
+
+\subsubsection{Phase 2: Enhancement (Model-Based Methods)}
+
+\textbf{Duration:} After Phase 1 completion + data accumulation
+
+\textbf{Methods to Implement:}
+\begin{enumerate}
+    \item Half-Life Regression (Rank 1) --- for text content
+    \item Cognitive Load Proxy Model (Rank 7) --- for video content
+    \item Engagement-Weighted BKT (Rank 4) --- for sequential content
+\end{enumerate}
+
+\textbf{Rationale:} Model-based methods provide theoretically grounded proficiency estimation with interpretable results. HLR offers the best overall performance and enables spaced repetition scheduling.
+
+\textbf{Prerequisites:}
+\begin{itemize}
+    \item Sufficient engagement data from Phase 1
+    \item Some validated assessment outcomes for calibration
+    \item Video player with detailed event tracking (for CLPM)
+\end{itemize}
+
+\textbf{Deliverables:}
+\begin{itemize}
+    \item HLR model trained on user engagement data
+    \item CLPM scoring for video content
+    \item Spaced repetition recommendations based on HLR half-lives
+    \item Calibrated confidence estimates for proficiency scores
+\end{itemize}
+
+\textbf{Success Criteria:}
+\begin{itemize}
+    \item Proficiency estimates correlate with subsequent assessment ($r > 0.40$)
+    \item Retention improvement measurable through A/B testing
+    \item Users receive personalized review recommendations
+\end{itemize}
+
+\subsubsection{Phase 3: Advanced Capabilities (ML-Based Methods)}
+
+\textbf{Duration:} After Phase 2 validation + substantial data accumulation
+
+\textbf{Methods to Implement:}
+\begin{enumerate}
+    \item Deep Knowledge Tracing with Engagement (Rank 3)
+    \item Stealth Assessment/SPRING (Rank 2) --- for interactive content
+    \item Regression/Classification Models (Rank 6) --- for early prediction
+\end{enumerate}
+
+\textbf{Rationale:} ML-based methods capture complex patterns and provide highest accuracy when sufficient training data is available. DKT complements model-based approaches; SPRING enables proficiency inference from game-like interactions.
+
+\textbf{Prerequisites:}
+\begin{itemize}
+    \item Large-scale engagement data (thousands of users)
+    \item Validated assessment outcomes for supervised training
+    \item Computational infrastructure for neural network training
+    \item Interactive content with structured action logging
+\end{itemize}
+
+\textbf{Deliverables:}
+\begin{itemize}
+    \item Trained DKT model for sequence-based proficiency tracking
+    \item SPRING pipeline for interactive content assessment
+    \item Early warning system using classification models
+    \item Ensemble proficiency scores combining multiple methods
+\end{itemize}
+
+\textbf{Success Criteria:}
+\begin{itemize}
+    \item Proficiency estimates achieve $r > 0.50$ with assessments
+    \item Early prediction enables effective intervention
+    \item Interactive content provides valid proficiency signals without questions
+\end{itemize}
+
+\subsection{Method Prioritization Summary}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Phase} & \textbf{Methods} & \textbf{Content Focus} & \textbf{Data Needs} \\
+\midrule
+Phase 1 & Time-on-Task, TWCM, XP & All & Minimal \\
+Phase 2 & HLR, CLPM, EW-BKT & Text, Video & Moderate \\
+Phase 3 & DKT, SPRING, Regression & Interactive, All & Substantial \\
+\bottomrule
+\end{tabular}
+\caption{Implementation Phase Summary}
+\end{table}
+
+\subsection{Dependencies and Prerequisites}
+
+\textbf{Infrastructure Requirements:}
+\begin{itemize}
+    \item Event logging system capturing all content interactions
+    \item Data warehouse for storing engagement histories
+    \item Assessment system for calibration and validation
+    \item ML training infrastructure (Phase 3)
+\end{itemize}
+
+\textbf{Data Requirements:}
+\begin{itemize}
+    \item Phase 1: Real-time interaction events
+    \item Phase 2: User histories + some assessment outcomes
+    \item Phase 3: Large-scale labeled data + structured action logs
+\end{itemize}
+
+\newpage
+
+%=============================================================================
+% LIMITATIONS AND FUTURE RESEARCH
+%=============================================================================
+\section{Limitations and Future Research}
+
+\subsection{Known Limitations}
+
+Based on the source material, several fundamental limitations apply to non-question proficiency estimation:
+
+\subsubsection{Inherent Uncertainty}
+
+The source characterizes this approach as ``an estimation problem under uncertainty.'' Passive study is less predictive of retention than active practice, meaning engagement-based estimates should be treated as \textbf{``lower-confidence evidence''} until validated by assessment. The analogy provided is apt: ``Estimating proficiency from content engagement is like tracking a hiker's progress by observing their pace and the terrain they cover; while you can reasonably estimate how far they've come, you don't know for certain they've reached the summit until they check in at the peak.''
+
+\subsubsection{Accuracy Ceiling}
+
+The documented statistical accuracy range of $r = 0.40$ to $0.65$ indicates that engagement-based methods explain only 16--42\% of variance in assessment outcomes. This represents a ceiling on precision that may limit high-stakes applications.
+
+\subsubsection{Industry Practice}
+
+The source notes that ``most major learning platforms track engagement data extensively but are conservative about using it as the sole proof of proficiency.'' Khan Academy, for example, does not count video watching toward mastery---they prioritize ``learning by doing'' to ensure high confidence. This conservatism reflects the limitations of engagement-only estimation.
+
+\subsubsection{Gaming and Validity Threats}
+
+Simple metrics like time-on-task are susceptible to gaming (leaving content open without engagement). More sophisticated methods are needed to distinguish genuine engagement from superficial interaction.
+
+\subsection{Areas Requiring Further Validation}
+
+\subsubsection{Cross-Platform Generalization}
+
+While methods have been validated in specific contexts (Duolingo for HLR, game-based learning for SPRING), further research is needed on generalization across different platforms, content types, and learner populations.
+
+\subsubsection{Long-Term Predictive Validity}
+
+Most documented evidence focuses on immediate or short-term correlations. Long-term retention and transfer of learning require additional validation.
+
+\subsubsection{Calibration Methods}
+
+The source documents the need for validation against external assessments but provides limited guidance on optimal calibration procedures and frequency.
+
+\subsection{Future Research Directions}
+
+Based on the source material's discussion of emerging work:
+
+\begin{enumerate}
+    \item \textbf{Cognitive Load Integration:} Tong \& Ren (2025) demonstrate the value of integrating knowledge tracing with cognitive load estimation for personalized learning paths.
+    \item \textbf{Multi-Modal Fusion:} Combining diverse behavioral signals (MMAE approach) warrants further investigation.
+    \item \textbf{Confidence Calibration:} Methods for producing well-calibrated uncertainty estimates alongside proficiency scores.
+    \item \textbf{Transfer Learning:} Reducing data requirements for new content/contexts through transfer from existing models.
+\end{enumerate}
+
+\newpage
+
+%=============================================================================
+% CONCLUSION AND RECOMMENDATIONS
+%=============================================================================
+\section{Conclusion and Recommendations}
+
+\subsection{Summary of Key Findings}
+
+This report has systematically evaluated thirteen methods for estimating proficiency from non-question learning activities. The analysis, based exclusively on documented research evidence and industry practice, yields the following conclusions:
+
+\textbf{Feasibility:} Estimating proficiency from engagement data is feasible as an estimation problem, with documented correlations of $r = 0.40$ to $0.65$ between engagement metrics and assessment outcomes.
+
+\textbf{Top Methods:} The three highest-ranked methods are:
+\begin{enumerate}
+    \item \textbf{Half-Life Regression (HLR)} --- Score: 4.70 --- Best overall due to documented effectiveness (12\% retention improvement), strong theoretical foundation, and practical applicability
+    \item \textbf{Stealth Assessment (SPRING)} --- Score: 4.10 --- Best for interactive content with validated correlation of $\approx 0.55$
+    \item \textbf{Deep Knowledge Tracing with Engagement} --- Score: 4.00 --- Best for capturing complex temporal patterns with sufficient data
+\end{enumerate}
+
+\textbf{Content-Specific Recommendations:}
+\begin{itemize}
+    \item \textbf{Video:} Cognitive Load Proxy Model leveraging pause/rewind behavioral signals
+    \item \textbf{Text/PDF:} Half-Life Regression for retention modeling
+    \item \textbf{Interactive:} Stealth Assessment (SPRING) for action sequence inference
+\end{itemize}
+
+\subsection{Final Recommendations}
+
+For the NEXS-399 Non-Question Proficiency Evaluation Framework:
+
+\begin{enumerate}
+    \item \textbf{Adopt a multi-method approach} that matches methods to content types rather than seeking a single universal solution.
+    
+    \item \textbf{Implement in phases}, starting with simple heuristics to establish data collection, then progressing to model-based and ML-based approaches as data accumulates.
+    
+    \item \textbf{Prioritize HLR} for text content and general proficiency tracking due to its documented effectiveness and trainability.
+    
+    \item \textbf{Invest in CLPM} for video content, implementing detailed player event logging to capture behavioral indicators.
+    
+    \item \textbf{Design interactive content} with SPRING-style evidence-centered logging from the outset.
+    
+    \item \textbf{Treat engagement-based estimates as lower-confidence evidence} and use periodic assessment to calibrate and validate models.
+    
+    \item \textbf{Communicate uncertainty} to stakeholders---these methods provide valuable signals but not definitive proficiency determination.
+\end{enumerate}
+
+\subsection{Next Steps}
+
+\begin{enumerate}
+    \item Implement Phase 1 event logging and baseline heuristic methods
+    \item Design calibration study with embedded assessments
+    \item Develop HLR model for text content
+    \item Implement video player instrumentation for CLPM
+    \item Plan interactive content with structured action logging
+    \item Establish A/B testing framework for method validation
+\end{enumerate}
+
+\newpage
+
+%=============================================================================
+% REFERENCES
+%=============================================================================
+\section{References}
+
+The following references are drawn from the source material's documented peer-reviewed citations:
+
+\begin{enumerate}
+    \item Chi, M. T. H., \& Wylie, R. (2014). The ICAP framework: Linking cognitive engagement to active learning outcomes. \textit{Educational Psychologist}, 49(4), 219--243.
+    
+    \item Corbett, A. T., \& Anderson, J. R. (1994). Knowledge tracing: Modeling the acquisition of procedural knowledge. \textit{User Modeling and User-Adapted Interaction}, 4(4), 253--278.
+    
+    \item Gonzalez-Brenes, J. P., Huang, Y., \& Brusilovsky, P. (2016). A data-driven approach for inferring student proficiency from game activity logs. \textit{Proceedings of the Workshop on Games and Learning Alliance}.
+    
+    \item Guo, P. J., Kim, J., \& Rubin, R. (2014). How video production affects student engagement: An empirical study of MOOC videos. \textit{Proceedings of the First ACM Conference on Learning @ Scale}, 41--50.
+    
+    \item Piech, C., Bassen, J., Huang, J., Ganguli, S., Sahami, M., Guibas, L. J., \& Sohl-Dickstein, J. (2015). Deep knowledge tracing. \textit{Advances in Neural Information Processing Systems}, 28.
+    
+    \item Settles, B., \& Meeder, B. (2016). A trainable spaced repetition model for language learning. \textit{Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics}, 1848--1858.
+    
+    \item Tong, X., \& Ren, Y. (2025). Deep knowledge tracing and cognitive load estimation for personalized learning path. \textit{Journal of Educational Technology}.
+    
+    \item Yürüm, O. T., et al. (2022). The use of video clickstream data to predict university students' test performance. \textit{Computers \& Education}, 177, 104366.
+\end{enumerate}
+
+\vspace{1cm}
+
+\noindent\rule{\textwidth}{0.4pt}
+
+\begin{center}
+\textit{End of Report}
+
+\vspace{0.5cm}
+
+Document Version: \documentversion \\
+Date: \documentdate \\
+Status: \documentstatus
+\end{center}
+
+\end{document}
