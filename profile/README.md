@@ -11,9 +11,9 @@
 - [2. Approach](#2-approach)
 - [3. Model Selection Rationale](#3-model-selection-rationale)
 - [4. Implementations](#4-implementations)
-  - [4.1. Interactive Content - AKT](#41-interactive-content---akt)
+  - [4.1. Video Content - SAINT+](#41-video-content---saint)
   - [4.2. Reading Content - LBKT](#42-reading-content---lbkt)
-  - [4.3. Video Content - SAINT+](#43-video-content---saint)
+  - [4.3. Interactive Content - AKT](#43-interactive-content---akt)
 - [5. Technical Considerations](#5-technical-considerations)
 
 
@@ -47,71 +47,14 @@ The selection of each Knowledge Tracing model for its respective content type is
 | Content Type | Knowledge Tracing Model | Justification |
 |--------------|------------------------|--------------|
 | **Video** | **SAINT+** | Native temporal embeddings (`elapsed_time`, `lag_time`) map directly to watch duration and session gaps. Transformer encoder-decoder architecture handles sequential video consumption patterns effectively, capturing both exercise context and response patterns in separate representational spaces. |
-| **Reading** | **LBKT** | The three-behavior architecture (speed → reading pace, attempts → re-reads, hints → highlights) provides a near-perfect semantic match to reading engagement patterns. No need to force-fit features—the model's behavioral channels align naturally with reading behaviors. |
-| **Interactive** | **AKT** | Monotonic attention with exponential decay is ideal for simulations where recent actions matter most for predicting current proficiency. Rasch-based difficulty embeddings work well for modeling action complexity and ability-difficulty interactions. |
+| **Reading** | **LBKT** | The three-behavior architecture (speed → reading pace, attempts → re-reads, hints → highlights) provides a strong semantic match to reading engagement patterns. The model's behavioral channels align naturally with reading behaviors without requiring feature engineering. |
+| **Interactive** | **AKT** | Monotonic attention with exponential decay is well-suited for simulations where recent actions matter most for predicting current proficiency. Rasch-based difficulty embeddings effectively model action complexity and ability-difficulty interactions. |
 
 ## 4. Implementations
 
 Three specialized implementations have been developed, each targeting a specific content type and grounded in established theoretical frameworks:
 
-### 4.1. Interactive Content - AKT
-
-**Directory**: `Interactive-Proficiency-AKT`
-
-**Context-Aware Attentive Knowledge Tracing (AKT)** models learner proficiency from interactive engagement sequences by combining insights from Item Response Theory (IRT) and cognitive science. AKT addresses two critical limitations of traditional knowledge tracing models.
-
-**Theoretical Foundation**:
-
-AKT is motivated by two key insights from psychometrics and cognitive science. First, drawing from **Item Response Theory (IRT)**, specifically the Rasch model, AKT recognizes that a learner's probability of success depends on the difference between their ability and the question's difficulty. Unlike traditional models that treat questions as atomic units, AKT decomposes question representations into concept embeddings plus difficulty scalars: `x_q = c_k + μ_q · d_k`. This allows the model to understand that different questions can test the same underlying knowledge at varying difficulty levels, enabling more nuanced proficiency estimation.
-
-Second, AKT implements **monotonic attention with exponential decay**, motivated by memory research showing that recent experiences are more diagnostic of current knowledge state than distant ones. Attention weights are multiplied by `exp(-λ · Δt)`, where `Δt` is the time gap between interactions. This encodes the principle that a correct answer from 5 minutes ago provides stronger evidence of current knowledge than the same answer from 5 months ago, accounting for potential forgetting.
-
-**Architecture**:
-
-AKT employs a three-module context-aware architecture:
-- **Knowledge Encoder**: Contextualizes the response history to understand what the learner has demonstrated
-- **Question Encoder**: Contextualizes the exercise sequence to capture how questions relate to each other
-- **Knowledge Retriever**: Uses decayed attention to selectively retrieve relevant historical knowledge for predicting current performance
-
-This separation allows the model to independently learn representations for "what was practiced," "how performance evolved," and "what's relevant now," making AKT particularly well-suited for interactive simulations, games, and adaptive testing scenarios where recency strongly predicts current state.
-
-**Key Features**:
-- Rasch-inspired embeddings that separate concept knowledge from question difficulty
-- Monotonic attention with exponential decay for temporal relevance weighting
-- Context-aware three-module architecture (knowledge encoder, question encoder, knowledge retriever)
-- Supports both Rasch and Non-Rasch model variants
-
-### 4.2. Reading Content - LBKT
-
-**Directory**: `Reading-Proficiency-LBKT`
-
-**Learning Behavior-oriented Knowledge Tracing (LBKT)** tracks knowledge states from reading behaviors by operationalizing a fundamental principle from educational psychology: **how you learn matters as much as whether you learn**. Unlike traditional models that treat all correct answers as equivalent evidence of knowledge, LBKT recognizes that learning outcomes depend critically on the behaviors exhibited during learning.
-
-**Theoretical Foundation**:
-
-LBKT is grounded in **behavioral learning theory** and decades of learning science research showing that different learning behaviors produce fundamentally different learning outcomes. A student who answers correctly after 5 attempts and 3 hints has demonstrated different learning than one who answered correctly in 2 seconds with no assistance. LBKT operationalizes this through three behavior channels derived from Intelligent Tutoring Systems research:
-
-- **Speed**: Normalized response time, capturing fluency and automaticity
-- **Attempts**: Retry count, capturing productive struggle versus guessing
-- **Hints**: Help-seeking behavior, capturing metacognitive awareness and scaffolded learning
-
-**Architecture**:
-
-LBKT employs a two-module architecture for behavior processing:
-
-1. **DBEQ (Differentiated Behavior Effect Quantifying) Module**: Embodies the principle that each behavior has an independent, quantifiable effect on knowledge acquisition. Fast correct answers contribute more to durable learning than slow hint-assisted answers, formalized through separate neural pathways that weight each behavior's contribution to knowledge gain.
-
-2. **FBEM (Fused Behavior Effect Measuring) Module**: Captures the theoretical insight that behaviors interact non-additively. Fast speed combined with no hints signals confident mastery, but fast speed combined with many attempts signals trial-and-error guessing—the same speed value means different things in different behavioral contexts. FBEM uses cross-attention between behavior channels to capture these interaction effects, learning a behavioral "grammar" of learning patterns.
-
-3. **Behavior-Aware Forgetting Gate**: Implements the principle from memory research that encoding strength predicts retention. Knowledge acquired through effortful, deliberate practice (slow, engaged) decays more slowly than knowledge acquired superficially (fast, hint-dependent), mirroring the **desirable difficulties framework** in learning science.
-
-**Key Features**:
-- Three-behavior architecture (Speed, Attempts, Hints) aligned with reading engagement patterns
-- Differentiated Behavior Effect Quantifying (DBEQ) module for independent behavior effects
-- Fused Behavior Effect Measuring (FBEM) module for behavior interaction modeling
-- Behavior-aware forgetting gate that accounts for encoding strength in retention
-
-### 4.3. Video Content - SAINT+
+### 4.1. Video Content - SAINT+
 
 **Directory**: `Video-Proficiency-SAINT`
 
@@ -138,6 +81,63 @@ This temporal awareness makes SAINT+ theoretically well-suited for any learning 
 - Cross-attention mechanism linking exercise context to response patterns
 - Causal masking to prevent future data leakage
 - Cross-validation AUC: 0.799
+
+### 4.2. Reading Content - LBKT
+
+**Directory**: `Reading-Proficiency-LBKT`
+
+**Learning Behavior-oriented Knowledge Tracing (LBKT)** tracks knowledge states from reading behaviors by operationalizing a fundamental principle from educational psychology: **how you learn matters as much as whether you learn**. Unlike traditional models that treat all correct answers as equivalent evidence of knowledge, LBKT recognizes that learning outcomes depend critically on the behaviors exhibited during learning.
+
+**Theoretical Foundation**:
+
+LBKT is grounded in **behavioral learning theory** and decades of learning science research showing that different learning behaviors produce fundamentally different learning outcomes. A student who answers correctly after 5 attempts and 3 hints has demonstrated different learning than one who answered correctly in 2 seconds with no assistance. LBKT operationalizes this through three behavior channels derived from Intelligent Tutoring Systems research:
+
+- **Speed**: Normalized response time, capturing fluency and automaticity
+- **Attempts**: Retry count, capturing productive struggle versus guessing
+- **Hints**: Help-seeking behavior, capturing metacognitive awareness and scaffolded learning
+
+**Architecture**:
+
+LBKT employs a modular architecture with three key components for behavior processing:
+
+1. **DBEQ (Differentiated Behavior Effect Quantifying) Module**: Embodies the principle that each behavior has an independent, quantifiable effect on knowledge acquisition. Fast correct answers contribute more to durable learning than slow hint-assisted answers, formalized through separate neural pathways that weight each behavior's contribution to knowledge gain.
+
+2. **FBEM (Fused Behavior Effect Measuring) Module**: Captures the theoretical insight that behaviors interact non-additively. Fast speed combined with no hints signals confident mastery, but fast speed combined with many attempts signals trial-and-error guessing—the same speed value means different things in different behavioral contexts. FBEM uses cross-attention between behavior channels to capture these interaction effects, learning a behavioral "grammar" of learning patterns.
+
+3. **Behavior-Aware Forgetting Gate**: Implements the principle from memory research that encoding strength predicts retention. Knowledge acquired through effortful, deliberate practice (slow, engaged) decays more slowly than knowledge acquired superficially (fast, hint-dependent), mirroring the **desirable difficulties framework** in learning science.
+
+**Key Features**:
+- Three-behavior architecture (Speed, Attempts, Hints) aligned with reading engagement patterns
+- Differentiated Behavior Effect Quantifying (DBEQ) module for independent behavior effects
+- Fused Behavior Effect Measuring (FBEM) module for behavior interaction modeling
+- Behavior-aware forgetting gate that accounts for encoding strength in retention
+
+### 4.3. Interactive Content - AKT
+
+**Directory**: `Interactive-Proficiency-AKT`
+
+**Context-Aware Attentive Knowledge Tracing (AKT)** models learner proficiency from interactive engagement sequences by combining insights from Item Response Theory (IRT) and cognitive science. AKT addresses two critical limitations of traditional knowledge tracing models.
+
+**Theoretical Foundation**:
+
+AKT is motivated by two key insights from psychometrics and cognitive science. First, drawing from **Item Response Theory (IRT)**, specifically the Rasch model, AKT recognizes that a learner's probability of success depends on the difference between their ability and the question's difficulty. Unlike traditional models that treat questions as atomic units, AKT decomposes question representations into concept embeddings plus difficulty scalars: `x_q = c_k + μ_q · d_k`. This allows the model to understand that different questions can test the same underlying knowledge at varying difficulty levels, enabling more nuanced proficiency estimation.
+
+Second, AKT implements **monotonic attention with exponential decay**, motivated by memory research showing that recent experiences are more diagnostic of current knowledge state than distant ones. Attention weights are multiplied by `exp(-λ · Δt)`, where `Δt` is the time gap between interactions. This encodes the principle that a correct answer from 5 minutes ago provides stronger evidence of current knowledge than the same answer from 5 months ago, accounting for potential forgetting.
+
+**Architecture**:
+
+AKT employs a three-module context-aware architecture:
+- **Knowledge Encoder**: Contextualizes the response history to understand what the learner has demonstrated
+- **Question Encoder**: Contextualizes the exercise sequence to capture how questions relate to each other
+- **Knowledge Retriever**: Uses decayed attention to selectively retrieve relevant historical knowledge for predicting current performance
+
+This separation allows the model to independently learn representations for "what was practiced," "how performance evolved," and "what's relevant now," making AKT well-suited for interactive simulations, games, and adaptive testing scenarios where recency strongly predicts current state.
+
+**Key Features**:
+- Rasch-inspired embeddings that separate concept knowledge from question difficulty
+- Monotonic attention with exponential decay for temporal relevance weighting
+- Context-aware three-module architecture (knowledge encoder, question encoder, knowledge retriever)
+- Supports both Rasch and Non-Rasch model variants
 
 
 
